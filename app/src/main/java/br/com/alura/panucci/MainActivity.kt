@@ -66,9 +66,14 @@ class MainActivity : ComponentActivity() {
                         bottomAppBarItemSelected = selectedItem,
                         onBottomAppBarItemSelectedChange = {
                             val route = it.route
-                            navController.navigate(route) {
-                                launchSingleTop = true
-                                popUpTo(route)
+                            if (route != currentDestination?.route) { // só navega se for diferente
+                                navController.navigate(route) {
+                                    launchSingleTop = true
+                                    popUpTo(navController.graph.startDestinationId) {
+                                        saveState = true
+                                    }
+                                    restoreState = true
+                                }
                             }
                         },
                         onFabClick = {
