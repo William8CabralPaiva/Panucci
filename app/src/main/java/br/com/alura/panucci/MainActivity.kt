@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
             Log.i("MainActivity", "onCreate: screens ${screens.toList()}")
             val currentScreen = screens.last()
             BackHandler(screens.size > 1) {
-                screens.removeLast()
+                screens.removeAt(screens.lastIndex)
             }
             PanucciTheme {
                 Surface(

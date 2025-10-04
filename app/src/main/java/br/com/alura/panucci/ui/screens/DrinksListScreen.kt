@@ -44,14 +44,19 @@ fun DrinksListScreen(
         }
         LazyVerticalStaggeredGrid(
             columns = StaggeredGridCells.Fixed(columns),
-            Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(
+                start = 16.dp,
+                end = 16.dp,
+                top = 16.dp,
+                bottom = 16.dp
+            ),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(products) { p ->
                 DrinkProductCard(
-                    product = p
+                    product = p,
+                    modifier = Modifier.padding(bottom = 16.dp) // espaço entre itens
                 )
             }
         }
