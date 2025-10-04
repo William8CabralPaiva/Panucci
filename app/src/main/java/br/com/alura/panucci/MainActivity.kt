@@ -27,6 +27,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import br.com.alura.panucci.routes.Routes.Companion.CHECKOUT
+import br.com.alura.panucci.routes.Routes.Companion.DETAILS_PRODUCT
 import br.com.alura.panucci.routes.Routes.Companion.DRINKS
 import br.com.alura.panucci.routes.Routes.Companion.HIGHLIGHTS
 import br.com.alura.panucci.routes.Routes.Companion.MENU
@@ -34,9 +36,11 @@ import br.com.alura.panucci.sampledata.bottomAppBarItems
 import br.com.alura.panucci.sampledata.sampleProducts
 import br.com.alura.panucci.ui.components.BottomAppBarItem
 import br.com.alura.panucci.ui.components.PanucciBottomAppBar
+import br.com.alura.panucci.ui.screens.CheckoutScreen
 import br.com.alura.panucci.ui.screens.DrinksListScreen
 import br.com.alura.panucci.ui.screens.HighlightsListScreen
 import br.com.alura.panucci.ui.screens.MenuListScreen
+import br.com.alura.panucci.ui.screens.ProductDetailsScreen
 import br.com.alura.panucci.ui.theme.PanucciTheme
 
 class MainActivity : ComponentActivity() {
@@ -77,19 +81,49 @@ class MainActivity : ComponentActivity() {
                             }
                         },
                         onFabClick = {
+                            navController.navigate(CHECKOUT)
                         }) {
                         NavHost(
                             navController = navController,
                             startDestination = HIGHLIGHTS
                         ) {
                             composable(HIGHLIGHTS) {
-                                HighlightsListScreen(products = sampleProducts)
+                                HighlightsListScreen(
+                                    products = sampleProducts,
+                                    onNavigateToDetails = {
+                                        navController.navigate(DETAILS_PRODUCT)
+                                    },
+                                    onNavigateToCheckout = {
+                                        navController.navigate(CHECKOUT)
+                                    }
+                                )
                             }
                             composable(MENU) {
-                                MenuListScreen(products = sampleProducts)
+                                MenuListScreen(
+                                    products = sampleProducts,
+                                    onNavigateToDetails = {
+                                       navController.navigate(DETAILS_PRODUCT)
+                                    }
+                                )
                             }
                             composable(DRINKS) {
-                                DrinksListScreen(products = sampleProducts)
+                                DrinksListScreen(
+                                    products = sampleProducts,
+                                    onNavigateToDetails = {
+                                        navController.navigate(DETAILS_PRODUCT)
+                                    }
+                                )
+                            }
+                            composable(DETAILS_PRODUCT) {
+                                ProductDetailsScreen(
+                                    product = sampleProducts.random(),
+                                    onNavigateToCheckout = {
+                                        navController.navigate(CHECKOUT)
+                                    },
+                                )
+                            }
+                            composable(CHECKOUT) {
+                                CheckoutScreen(products = sampleProducts)
                             }
                         }
                     }

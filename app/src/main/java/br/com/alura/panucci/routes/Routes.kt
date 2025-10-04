@@ -6,6 +6,6 @@ class Routes {
         const val MENU = "menu"
         const val DRINKS = "drinks"
         const val DETAILS_PRODUCT = "detail_product"
-        const val ORDER = "order"
+        const val CHECKOUT = "checkout"
     }
 }
