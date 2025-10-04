@@ -10,8 +10,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PointOfSale
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.alura.panucci.sampledata.bottomAppBarItems
@@ -19,15 +31,27 @@ import br.com.alura.panucci.sampledata.sampleProductWithImage
 import br.com.alura.panucci.sampledata.sampleProducts
 import br.com.alura.panucci.ui.components.BottomAppBarItem
 import br.com.alura.panucci.ui.components.PanucciBottomAppBar
-import br.com.alura.panucci.ui.screens.*
+import br.com.alura.panucci.ui.screens.CheckoutScreen
+import br.com.alura.panucci.ui.screens.DrinksListScreen
+import br.com.alura.panucci.ui.screens.HighlightsListScreen
+import br.com.alura.panucci.ui.screens.MenuListScreen
+import br.com.alura.panucci.ui.screens.ProductDetailsScreen
 import br.com.alura.panucci.ui.theme.PanucciTheme
 
 class MainActivity : ComponentActivity() {
 
+    companion object {
+        const val HIGHLIGHTS = "Destaques"
+        const val MENU = "Menu"
+        const val DRINKS = "Bebidas"
+        const val DETAILS_PRODUCT = "DetalhesProduto"
+        const val ORDER = "Pedido"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val initialScreen = "Destaques"
+            val initialScreen = HIGHLIGHTS
             val screens = remember {
                 mutableStateListOf(initialScreen)
             }
@@ -52,28 +76,32 @@ class MainActivity : ComponentActivity() {
                             screens.add(it.label)
                         },
                         onFabClick = {
-                            screens.add("Pedido")
+                            screens.add(ORDER)
                         }) {
                         when (currentScreen) {
-                            "Destaques" -> HighlightsListScreen(
+                            HIGHLIGHTS -> HighlightsListScreen(
                                 products = sampleProducts,
                                 onOrderClick = {
-                                    screens.add("Pedido")
+                                    screens.add(ORDER)
                                 },
                                 onProductClick = {
-                                    screens.add("DetalhesProduto")
+                                    screens.add(DETAILS_PRODUCT)
                                 }
                             )
-                            "Menu" -> MenuListScreen(
+
+                            MENU -> MenuListScreen(
                                 products = sampleProducts
                             )
-                            "Bebidas" -> DrinksListScreen(
+
+                            DRINKS -> DrinksListScreen(
                                 products = sampleProducts + sampleProducts
                             )
-                            "DetalhesProduto" -> ProductDetailsScreen(
+
+                            DETAILS_PRODUCT -> ProductDetailsScreen(
                                 product = sampleProductWithImage
                             )
-                            "Pedido" -> CheckoutScreen(products = sampleProducts)
+
+                            ORDER -> CheckoutScreen(products = sampleProducts)
                         }
                     }
                 }
@@ -89,7 +117,7 @@ fun PanucciApp(
     bottomAppBarItemSelected: BottomAppBarItem = bottomAppBarItems.first(),
     onBottomAppBarItemSelectedChange: (BottomAppBarItem) -> Unit = {},
     onFabClick: () -> Unit = {},
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     Scaffold(
         topBar = {
