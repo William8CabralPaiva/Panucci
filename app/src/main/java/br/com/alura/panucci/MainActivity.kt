@@ -28,8 +28,8 @@ import br.com.alura.panucci.navigation.PanucciNavHost
 import br.com.alura.panucci.navigation.drinksRoute
 import br.com.alura.panucci.navigation.highlightsListRoute
 import br.com.alura.panucci.navigation.menuRoute
+import br.com.alura.panucci.navigation.navigateSingleTopWithPopUpTo
 import br.com.alura.panucci.navigation.navigateToCheckout
-import br.com.alura.panucci.navigation.navigateToSingleTop
 import br.com.alura.panucci.ui.components.BottomAppBarItem
 import br.com.alura.panucci.ui.components.PanucciBottomAppBar
 import br.com.alura.panucci.ui.components.bottomAppBarItems
@@ -75,7 +75,7 @@ class MainActivity : ComponentActivity() {
                     PanucciApp(
                         bottomAppBarItemSelected = selectedItem,
                         onBottomAppBarItemSelectedChange = {
-                            navController.navigateToSingleTop(it)
+                            navController.navigateSingleTopWithPopUpTo(it)
                         },
                         isShowTopBar = containsInBottomAppBarItems,
                         isShowBottomBar = containsInBottomAppBarItems,
