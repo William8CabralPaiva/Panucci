@@ -17,6 +17,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -144,11 +145,18 @@ class MainActivity : ComponentActivity() {
                                             navController.navigate(AppDestination.Checkout.route)
                                         },
                                     )
+                                } ?: LaunchedEffect(Unit) {
+                                    navController.navigateUp()
                                 }
-
                             }
                             composable(AppDestination.Checkout.route) {
-                                CheckoutScreen(products = sampleProducts)
+                                CheckoutScreen(
+                                    products = sampleProducts,
+                                    onPopBackStack = {
+                                        // msm coisa do pop diferença é que ele tem integração com o deeplink
+                                        navController.navigateUp()
+                                    }
+                                )
                             }
                         }
                     }
