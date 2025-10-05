@@ -1,5 +1,6 @@
 package br.com.alura.panucci.ui.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -16,13 +17,17 @@ import br.com.alura.panucci.sampledata.sampleProducts
 import br.com.alura.panucci.ui.components.MenuProductCard
 import br.com.alura.panucci.ui.theme.PanucciTheme
 import br.com.alura.panucci.ui.theme.caveatFont
+import br.com.alura.panucci.ui.uistate.HighlightsListUiState
+import br.com.alura.panucci.ui.uistate.MenuListUiState
 
 @Composable
 fun MenuListScreen(
     modifier: Modifier = Modifier,
     title: String = "Menu",
-    products: List<Product> = emptyList(),
+    uiState: MenuListUiState = MenuListUiState(),
+    onNavigateToDetails: (Product) -> Unit = {},
 ) {
+    val products = uiState.products
     Column(
         modifier.fillMaxSize()
     ) {
@@ -43,9 +48,13 @@ fun MenuListScreen(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            items(products) { p ->
+            items(products) { product ->
                 MenuProductCard(
-                    product = p,
+                    product = product,
+                    Modifier
+                        .clickable {
+                            onNavigateToDetails(product)
+                        }
                 )
             }
         }
@@ -58,7 +67,7 @@ fun MenuListScreenPreview() {
     PanucciTheme {
         Surface {
             MenuListScreen(
-                products = sampleProducts
+                uiState = MenuListUiState(sampleProducts)
             )
         }
     }

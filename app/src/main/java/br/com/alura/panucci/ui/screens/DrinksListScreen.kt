@@ -1,6 +1,7 @@
 package br.com.alura.panucci.ui.screens
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
@@ -18,15 +19,19 @@ import br.com.alura.panucci.sampledata.sampleProducts
 import br.com.alura.panucci.ui.components.DrinkProductCard
 import br.com.alura.panucci.ui.theme.PanucciTheme
 import br.com.alura.panucci.ui.theme.caveatFont
+import br.com.alura.panucci.ui.uistate.CheckoutUiState
+import br.com.alura.panucci.ui.uistate.DrinksListUiState
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DrinksListScreen(
     modifier: Modifier = Modifier,
     title: String = "Bebidas",
-    products: List<Product> = emptyList(),
+    uiState: DrinksListUiState = DrinksListUiState(),
     columns: Int = 2,
+    onNavigateToDetails: (Product) -> Unit = {},
 ) {
+    val products = uiState.products
     Column(
         modifier
             .fillMaxSize()
@@ -44,14 +49,24 @@ fun DrinksListScreen(
         }
         LazyVerticalStaggeredGrid(
             columns = StaggeredGridCells.Fixed(columns),
-            Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(
+                start = 16.dp,
+                end = 16.dp,
+                top = 16.dp,
+                bottom = 16.dp
+            ),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            items(products) { p ->
+            items(products) { product ->
                 DrinkProductCard(
-                    product = p
+                    product = product,
+                    modifier = Modifier
+                        .padding(bottom = 16.dp)
+                        . // espaço entre itens
+                        clickable {
+                            onNavigateToDetails(product)
+                        }
                 )
             }
         }
@@ -64,7 +79,7 @@ fun DrinksListScreenPreview() {
     PanucciTheme {
         Surface {
             DrinksListScreen(
-                products = sampleProducts,
+                uiState = DrinksListUiState(sampleProducts),
                 title = "Bebidas"
             )
         }

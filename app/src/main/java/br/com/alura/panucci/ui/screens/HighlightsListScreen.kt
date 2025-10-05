@@ -17,15 +17,18 @@ import br.com.alura.panucci.sampledata.sampleProducts
 import br.com.alura.panucci.ui.components.HighlightProductCard
 import br.com.alura.panucci.ui.theme.PanucciTheme
 import br.com.alura.panucci.ui.theme.caveatFont
+import br.com.alura.panucci.ui.uistate.DrinksListUiState
+import br.com.alura.panucci.ui.uistate.HighlightsListUiState
 
 @Composable
 fun HighlightsListScreen(
     modifier: Modifier = Modifier,
     title: String = "Destaques do dia",
-    products: List<Product> = emptyList(),
-    onOrderClick: () -> Unit = {},
-    onProductClick: () -> Unit = {}
+    uiState: HighlightsListUiState = HighlightsListUiState(),
+    onNavigateToCheckout: () -> Unit = {},
+    onNavigateToDetails: (Product) -> Unit = {},
 ) {
+    val products = uiState.products
     Column(
         modifier
             .fillMaxSize()
@@ -47,13 +50,13 @@ fun HighlightsListScreen(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            items(products) { p ->
+            items(products) { product ->
                 HighlightProductCard(
-                    product = p,
+                    product = product,
                     Modifier.clickable {
-                        onProductClick()
+                        onNavigateToDetails(product)
                     },
-                    onOrderClick = onOrderClick
+                    onOrderClick = onNavigateToCheckout
                 )
             }
         }
@@ -66,7 +69,7 @@ fun HighlightsListScreenPreview() {
     PanucciTheme {
         Surface {
             HighlightsListScreen(
-                products = sampleProducts,
+                uiState = HighlightsListUiState(sampleProducts),
                 title = "Destaques do dia"
             )
         }

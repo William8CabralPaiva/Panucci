@@ -21,12 +21,15 @@ import br.com.alura.panucci.model.Product
 import br.com.alura.panucci.sampledata.sampleProducts
 import br.com.alura.panucci.ui.components.CheckoutItemCard
 import br.com.alura.panucci.ui.theme.PanucciTheme
+import br.com.alura.panucci.ui.uistate.CheckoutUiState
 
 @Composable
 fun CheckoutScreen(
     modifier: Modifier = Modifier,
-    products: List<Product> = emptyList()
+    uiState: CheckoutUiState = CheckoutUiState(),
+    onPopBackStack: () -> Unit = {}
 ) {
+    val products = uiState.products
     Box(
         modifier.fillMaxSize()
     ) {
@@ -127,7 +130,7 @@ fun CheckoutScreen(
             }
         }
         Button(
-            onClick = { /*TODO*/ },
+            onClick = { onPopBackStack() },
             Modifier
                 .padding(
                     16.dp
@@ -155,7 +158,7 @@ fun CheckoutScreenPreview() {
     PanucciTheme {
         Surface {
             CheckoutScreen(
-                products = sampleProducts
+                uiState = CheckoutUiState(sampleProducts),
             )
         }
     }
