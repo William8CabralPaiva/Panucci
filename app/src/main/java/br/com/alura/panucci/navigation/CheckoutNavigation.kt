@@ -7,7 +7,7 @@ import androidx.navigation.compose.composable
 import br.com.alura.panucci.sampledata.sampleProducts
 import br.com.alura.panucci.ui.screens.CheckoutScreen
 
-private const val checkoutRoute = "checkout"
+internal const val checkoutRoute = "checkout"
 
 fun NavGraphBuilder.checkoutScreen(navController: NavHostController) {
     composable(checkoutRoute) {
