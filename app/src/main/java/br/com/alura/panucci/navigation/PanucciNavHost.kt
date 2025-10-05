@@ -55,9 +55,7 @@ fun NavController.navigateToSingleTop(
 
     val navOptions = navOptions {
         launchSingleTop = true
-        popUpTo(route) {
-            saveState = true
-        }
+        popUpTo(graph.startDestinationId) { saveState = true }
         restoreState = true
     }
     navigate(navOptions)
