@@ -5,22 +5,21 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import br.com.alura.panucci.ui.screens.CheckoutScreen
 import br.com.alura.panucci.ui.viewmodels.CheckoutViewModel
 
-internal const val checkoutRoute = "checkout"
+private const val checkoutRoute = "checkout"
 
-fun NavGraphBuilder.checkoutScreen(navController: NavHostController) {
+fun NavGraphBuilder.checkoutScreen(
+    onPopBackStack: () -> Unit,
+) {
     composable(checkoutRoute) {
         val viewModel: CheckoutViewModel = viewModel()
         val uiState by viewModel.uiState.collectAsState()
         CheckoutScreen(
             uiState = uiState,
-            onPopBackStack = {
-                navController.navigateUp()
-            },
+            onOrderClick = onPopBackStack,
         )
     }
 }

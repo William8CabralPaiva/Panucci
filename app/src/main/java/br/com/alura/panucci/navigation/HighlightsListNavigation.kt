@@ -5,30 +5,31 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import br.com.alura.panucci.model.Product
 import br.com.alura.panucci.ui.screens.HighlightsListScreen
 import br.com.alura.panucci.ui.viewmodels.HighlightsListViewModel
 
 internal const val highlightsListRoute = "highlight"
 
-fun NavGraphBuilder.highlightsListScreen(navController: NavHostController) {
+fun NavGraphBuilder.highlightsListScreen(
+    onNavigateToCheckout: () -> Unit,
+    onNavigateToProductDetails: (Product) -> Unit,
+) {
     composable(highlightsListRoute) {
-        val viewModel: HighlightsListViewModel = viewModel()
+        val viewModel = viewModel<HighlightsListViewModel>()
         val uiState by viewModel.uiState.collectAsState()
         HighlightsListScreen(
             uiState = uiState,
-            onNavigateToDetails = { product ->
-                navController.navigateToProductDetails(product.id)
-            },
-            onNavigateToCheckout = {
-                navController.navigateToCheckout()
-            },
+            onProductClick = onNavigateToProductDetails,
+            onOrderClick = onNavigateToCheckout,
         )
     }
 }
 
-fun NavController.navigateToHighlightsList(navOptions: NavOptions? = null) {
+fun NavController.navigateToHighlightsList(
+    navOptions: NavOptions? = null,
+) {
     navigate(highlightsListRoute, navOptions)
 }
