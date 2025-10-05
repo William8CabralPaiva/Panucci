@@ -24,15 +24,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navOptions
 import br.com.alura.panucci.navigation.PanucciNavHost
 import br.com.alura.panucci.navigation.drinksRoute
 import br.com.alura.panucci.navigation.highlightsListRoute
 import br.com.alura.panucci.navigation.menuRoute
 import br.com.alura.panucci.navigation.navigateToCheckout
-import br.com.alura.panucci.navigation.navigateToDrinks
-import br.com.alura.panucci.navigation.navigateToHighlightsList
-import br.com.alura.panucci.navigation.navigateToMenu
+import br.com.alura.panucci.navigation.navigateToSingleTop
 import br.com.alura.panucci.ui.components.BottomAppBarItem
 import br.com.alura.panucci.ui.components.PanucciBottomAppBar
 import br.com.alura.panucci.ui.components.bottomAppBarItems
@@ -78,39 +75,7 @@ class MainActivity : ComponentActivity() {
                     PanucciApp(
                         bottomAppBarItemSelected = selectedItem,
                         onBottomAppBarItemSelectedChange = {
-//                            val route = it.destination
-//                            if (route != currentDestination?.route) { // só navega se for diferente
-//                                navController.navigate(route) {
-//                                    launchSingleTop = true
-//                                    popUpTo(navController.graph.startDestinationId) {
-//                                        saveState = true
-//                                    }
-//                                    restoreState = true
-//                                }
-//                            }
-                            val (route, navigate) = when(it) {
-                                BottomAppBarItem.Drinks -> Pair(
-                                    drinksRoute,
-                                    navController::navigateToDrinks
-                                )
-                                BottomAppBarItem.HighlightsList -> Pair(
-                                    highlightsListRoute,
-                                    navController::navigateToHighlightsList
-                                )
-                                BottomAppBarItem.Menu -> Pair(
-                                    menuRoute,
-                                    navController::navigateToMenu
-                                )
-                            }
-
-                            val navOptions = navOptions {
-                                launchSingleTop = true
-                                popUpTo(route) {
-                                    saveState = true
-                                }
-                                restoreState = true
-                            }
-                            navigate(navOptions)
+                            navController.navigateToSingleTop(it)
                         },
                         isShowTopBar = containsInBottomAppBarItems,
                         isShowBottomBar = containsInBottomAppBarItems,
