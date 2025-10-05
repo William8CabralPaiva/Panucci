@@ -23,7 +23,7 @@ fun MenuListScreen(
     modifier: Modifier = Modifier,
     title: String = "Menu",
     products: List<Product> = emptyList(),
-    onNavigateToDetails: () -> Unit = {},
+    onNavigateToDetails: (Product) -> Unit = {},
 ) {
     Column(
         modifier.fillMaxSize()
@@ -45,12 +45,12 @@ fun MenuListScreen(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            items(products) { p ->
+            items(products) { product ->
                 MenuProductCard(
-                    product = p,
+                    product = product,
                     Modifier
                         .clickable {
-                            onNavigateToDetails()
+                            onNavigateToDetails(product)
                         }
                 )
             }

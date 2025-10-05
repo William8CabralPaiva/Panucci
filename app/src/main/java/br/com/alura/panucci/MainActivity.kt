@@ -27,12 +27,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import br.com.alura.panucci.routes.Routes.Companion.CHECKOUT
-import br.com.alura.panucci.routes.Routes.Companion.DETAILS_PRODUCT
-import br.com.alura.panucci.routes.Routes.Companion.DRINKS
-import br.com.alura.panucci.routes.Routes.Companion.HIGHLIGHTS
-import br.com.alura.panucci.routes.Routes.Companion.MENU
-import br.com.alura.panucci.sampledata.bottomAppBarItems
+import br.com.alura.panucci.navigation.AppDestination
+import br.com.alura.panucci.navigation.bottomAppBarItems
 import br.com.alura.panucci.sampledata.sampleProducts
 import br.com.alura.panucci.ui.components.BottomAppBarItem
 import br.com.alura.panucci.ui.components.PanucciBottomAppBar
@@ -53,6 +49,24 @@ class MainActivity : ComponentActivity() {
             val backStackEntryState by navController.currentBackStackEntryAsState()
             val currentDestination = backStackEntryState?.destination
 
+            val containsInBottomAppBarItems = currentDestination?.let { destination ->
+                bottomAppBarItems.find {
+                    it.destination.route == destination.route
+                }
+            } != null
+
+            val isShowFab = when (currentDestination?.route) {
+                AppDestination.Menu.route,
+                AppDestination.Drinks.route,
+                    -> true
+
+                else -> false
+            }
+
+            fun getProductDetailsRoute(id: String): String {
+                return "${AppDestination.ProductDetails.route}/${id}"
+            }
+
             PanucciTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -61,7 +75,7 @@ class MainActivity : ComponentActivity() {
                     var selectedItem by remember(currentDestination) {
                         val item = currentDestination?.let { destination ->
                             bottomAppBarItems.find {
-                                it.route == destination.route
+                                it.destination.route == destination.route
                             }
                         } ?: bottomAppBarItems.first()
                         mutableStateOf(item)
@@ -69,7 +83,7 @@ class MainActivity : ComponentActivity() {
                     PanucciApp(
                         bottomAppBarItemSelected = selectedItem,
                         onBottomAppBarItemSelectedChange = {
-                            val route = it.route
+                            val route = it.destination.route
                             if (route != currentDestination?.route) { // só navega se for diferente
                                 navController.navigate(route) {
                                     launchSingleTop = true
@@ -80,49 +94,60 @@ class MainActivity : ComponentActivity() {
                                 }
                             }
                         },
+                        isShowTopBar = containsInBottomAppBarItems,
+                        isShowBottomBar = containsInBottomAppBarItems,
+                        isShowFab = isShowFab,
                         onFabClick = {
-                            navController.navigate(CHECKOUT)
+                            navController.navigate(AppDestination.Checkout.route)
                         }) {
                         NavHost(
                             navController = navController,
-                            startDestination = HIGHLIGHTS
+                            startDestination = AppDestination.Highlight.route
                         ) {
-                            composable(HIGHLIGHTS) {
+                            composable(AppDestination.Highlight.route) {
                                 HighlightsListScreen(
                                     products = sampleProducts,
                                     onNavigateToDetails = {
-                                        navController.navigate(DETAILS_PRODUCT)
+                                        navController.navigate(getProductDetailsRoute(it.id))
                                     },
                                     onNavigateToCheckout = {
-                                        navController.navigate(CHECKOUT)
+                                        navController.navigate(AppDestination.Checkout.route)
                                     }
                                 )
                             }
-                            composable(MENU) {
+                            composable(AppDestination.Menu.route) {
                                 MenuListScreen(
                                     products = sampleProducts,
                                     onNavigateToDetails = {
-                                       navController.navigate(DETAILS_PRODUCT)
+                                        navController.navigate(getProductDetailsRoute(it.id))
                                     }
                                 )
                             }
-                            composable(DRINKS) {
+                            composable(AppDestination.Drinks.route) {
                                 DrinksListScreen(
                                     products = sampleProducts,
                                     onNavigateToDetails = {
-                                        navController.navigate(DETAILS_PRODUCT)
+                                        navController.navigate(getProductDetailsRoute(it.id))
                                     }
                                 )
                             }
-                            composable(DETAILS_PRODUCT) {
-                                ProductDetailsScreen(
-                                    product = sampleProducts.random(),
-                                    onNavigateToCheckout = {
-                                        navController.navigate(CHECKOUT)
-                                    },
-                                )
+                            composable(
+                                "${AppDestination.ProductDetails.route}/{productId}"
+                            ) { backStackEntry ->
+                                val id = backStackEntry.arguments?.getString("productId")
+                                sampleProducts.find {
+                                    it.id == id
+                                }?.let { product ->
+                                    ProductDetailsScreen(
+                                        product = product,
+                                        onNavigateToCheckout = {
+                                            navController.navigate(AppDestination.Checkout.route)
+                                        },
+                                    )
+                                }
+
                             }
-                            composable(CHECKOUT) {
+                            composable(AppDestination.Checkout.route) {
                                 CheckoutScreen(products = sampleProducts)
                             }
                         }
@@ -140,31 +165,40 @@ fun PanucciApp(
     bottomAppBarItemSelected: BottomAppBarItem = bottomAppBarItems.first(),
     onBottomAppBarItemSelectedChange: (BottomAppBarItem) -> Unit = {},
     onFabClick: () -> Unit = {},
+    isShowTopBar: Boolean = false,
+    isShowBottomBar: Boolean = false,
+    isShowFab: Boolean = false,
     content: @Composable () -> Unit,
 ) {
     Scaffold(
         topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(text = "Ristorante Panucci")
-                },
-            )
+            if (isShowTopBar) {
+                CenterAlignedTopAppBar(
+                    title = {
+                        Text(text = "Ristorante Panucci")
+                    },
+                )
+            }
         },
         bottomBar = {
-            PanucciBottomAppBar(
-                item = bottomAppBarItemSelected,
-                items = bottomAppBarItems,
-                onItemChange = onBottomAppBarItemSelectedChange,
-            )
+            if (isShowBottomBar) {
+                PanucciBottomAppBar(
+                    item = bottomAppBarItemSelected,
+                    items = bottomAppBarItems,
+                    onItemChange = onBottomAppBarItemSelectedChange,
+                )
+            }
         },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = onFabClick
-            ) {
-                Icon(
-                    Icons.Filled.PointOfSale,
-                    contentDescription = null
-                )
+            if (isShowFab) {
+                FloatingActionButton(
+                    onClick = onFabClick
+                ) {
+                    Icon(
+                        Icons.Filled.PointOfSale,
+                        contentDescription = null
+                    )
+                }
             }
         }
     ) {

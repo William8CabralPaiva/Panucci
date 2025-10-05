@@ -27,7 +27,7 @@ fun DrinksListScreen(
     title: String = "Bebidas",
     products: List<Product> = emptyList(),
     columns: Int = 2,
-    onNavigateToDetails: () -> Unit = {},
+    onNavigateToDetails: (Product) -> Unit = {},
 ) {
     Column(
         modifier
@@ -55,14 +55,14 @@ fun DrinksListScreen(
             ),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            items(products) { p ->
+            items(products) { product ->
                 DrinkProductCard(
-                    product = p,
+                    product = product,
                     modifier = Modifier
                         .padding(bottom = 16.dp)
                         . // espaço entre itens
                         clickable {
-                            onNavigateToDetails()
+                            onNavigateToDetails(product)
                         }
                 )
             }
