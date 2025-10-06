@@ -60,7 +60,7 @@ fun DrinksListScreen(
                     Modifier
                         .padding(bottom = 16.dp)
                         .semantics {
-                            contentDescription = "drinks product card"
+                            contentDescription = "drink product card item"
                         }
                         .clickable {
                             onProductClick(p)

@@ -53,7 +53,7 @@ fun MenuListScreen(
                 MenuProductCard(
                     product = p,
                     Modifier
-                        .semantics { contentDescription = "menu product card"}
+                        .semantics { contentDescription = "menu product card item"}
                         .clickable {
                             onProductClick(p)
                         }

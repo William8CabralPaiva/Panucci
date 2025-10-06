@@ -56,7 +56,7 @@ fun HighlightsListScreen(
                     product = p,
                     Modifier
                         .semantics {
-                            contentDescription = "highlight product card"
+                            contentDescription = "highlight product card item"
                         }
                         .clickable {
                         onProductClick(p)
