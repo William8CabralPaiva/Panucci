@@ -12,6 +12,9 @@ import androidx.compose.material.icons.filled.PointOfSale
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -118,7 +121,10 @@ fun PanucciApp(
     Scaffold(
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState) { data ->
-                Snackbar(Modifier.padding(8.dp)) {
+                Snackbar(Modifier.padding(8.dp)
+                    .semantics {
+                        testTag = "PanucciSnackbar"
+                    }) {
                     Text(text = data.visuals.message)
                 }
             }
@@ -129,6 +135,9 @@ fun PanucciApp(
                     title = {
                         Text(text = "Ristorante Panucci")
                     },
+                    Modifier.semantics {
+                        testTag = "PanucciTopAppBar"
+                    },
                 )
             }
         },
@@ -138,13 +147,17 @@ fun PanucciApp(
                     item = bottomAppBarItemSelected,
                     items = bottomAppBarItems,
                     onItemChange = onBottomAppBarItemSelectedChange,
+                    modifier = Modifier.semantics {
+                        testTag = "PanucciBottomAppBar"
+                    }
                 )
             }
         },
         floatingActionButton = {
             if (isShowFab) {
                 FloatingActionButton(
-                    onClick = onFabClick
+                    onClick = onFabClick,
+                    Modifier.semantics { contentDescription = "Floating Action Button for order" }
                 ) {
                     Icon(
                         Icons.Filled.PointOfSale,
